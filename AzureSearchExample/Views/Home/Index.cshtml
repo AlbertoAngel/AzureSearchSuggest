@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Azure Search ";
+}
+
+<div class="example">
+    <h2 class="exampleTitle">Suggestions with Hit Highlighting (User Collection)</h2>
+    <br />
+    <div class="searchBoxForm">
+        <input class="searchBox" type="text" id="exampleAutocomplete" placeholder="search">
+        <input type="submit" class="searchBoxSubmit">
+    </div>
+</div>
+<br />
+<br />
+<div class="example">
+    <h2 class="exampleTitle">Suggestions with Hit Highlighting (AudienceChannel Collection)</h2>
+    <br />
+    <div class="searchBoxForm">
+        <input class="searchBox" type="text" id="exampleAutocompleteAudienceChannel" placeholder="search">
+        <input type="submit" class="searchBoxSubmit">
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        var updateTextbox = function (event, ui) {
+            var result = ui.item.value.replace(/<\/?[^>]+(>|$)/g, "");
+            $("#exampleAutocomplete").val(result);
+            return false;
+        };
+
+        $("#exampleAutocomplete").autocomplete({
+            source: "/home/suggestUsers?highlights=true&fuzzy=false&",
+            minLength: 3,
+            position: {
+                my: "left top",
+                at: "left-23 bottom+10"
+            },
+            select: updateTextbox,
+            focus: updateTextbox
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+            console.log(item);
+
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a>" + item.label + "</a>")
+                .appendTo(ul);
+            };
+
+        // seccion Audience channel
+        $("#exampleAutocompleteAudienceChannel").autocomplete({
+            source: "/home/suggestProducts?highlights=false&fuzzy=false&",
+            minLength: 3,
+            position: {
+                my: "left top",
+                at: "left-23 bottom+10"
+            },
+            select: updateAudienceTextbox,
+            focus: updateAudienceTextbox
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+            console.log(item);
+
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a>" + item.label + "</a>")
+                .appendTo(ul);
+            };
+
+        var updateAudienceTextbox = function (event, ui) {
+            var result = ui.item.value.replace(/<\/?[^>]+(>|$)/g, "");
+            $("#exampleAutocompleteAudienceChannel").val(result);
+            return false;
+        };
+    });
+</script>
